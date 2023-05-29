@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Who follows me on Hive?</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <div class="title">
+            {% if request.path == "/result" %}
+            <h3><a href="/">Who follows <b id="typed-text">{{ account_name }}</b> on <b
+                        style="color:#E31337;">Hive</b>?</a></h3>
+            {% else %}
+            <h3><a href="/">Who follows me on <b style="color:#E31337;">Hive</b>?</a></h3>
+            {% endif %}
+            <p>by @noakmilo <a href="https://twitter.com/noakmilo" target="_blank"><i class="fab fa-twitter"></i></a> <a
+                    href="https://peakd.com/@noakmilo" target="_blank"><img class="hiveicon"
+                        src="https://hive.io/favicons/favicon.ico"></a></p>
+        </div>
+        <div class="headercontainer">
+            <form action="/result" method="POST">
+                <label for="account">Username:</label>
+                <input type="text" id="account" name="account" required> <input id="submit" type="submit" value="Submit"
+                    class="submitbtn">
+            </form>
+        </div>
+    </header>
+    {% if request.path == "/result" %}
+    <div class="container">
+        <!-- Slider de opciones -->
+        <div id="slider" class="slidercontainer">
+            <input type="radio" id="combined" name="option" value="combined" checked>
+            <label for="combined" class="sliderlbl">Followers & Following</label>
+            <input type="radio" id="comparison" name="option" value="comparison">
+            <label for="comparison" class="sliderlbl">Comparation</label>
+        </div>
+        
+        <!-- Tabla de Followers y Following combinados -->
+        <div id="combined-table" class="table-container">
+            <h3>Followers & Following</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>{{ account_name }}'s followers ({{ total_followers }})</th>
+                        <th>{{ account_name }}'s following ({{ total_following }})</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in range(max(followers|length, following|length)) %}
+                    <tr>
+                        <td><a target="_blank"
+                                href="https://peakd.com/@{{ followers[i] if i < followers|length else '' }}">{{
+                                followers[i] if i < followers|length else '' }}</a>
+                        </td>
+                        <td><a target="_blank"
+                                href="https://peakd.com/@{{ following[i] if i < following|length else '' }}">{{
+                                following[i] if i < following|length else '' }}</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Tabla de Comparation -->
+        <div id="comparison-table" class="table-container">
+            <h3>Comparation</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>No followers of {{ account_name }} ({{ follows_not_followed_by|length }})</th>
+                        <th>Not followed by {{ account_name }} ({{ follows_followed_by|length }})</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user_followed in follows_not_followed_by %}
+                    {% if loop.index <= follows_followed_by|length %} <tr>
+                        <td><a target="_blank" href="https://peakd.com/@{{ user_followed }}">{{ user_followed }}</a>
+                        </td>
+                        <td><a target="_blank" href="https://peakd.com/@{{ follows_followed_by[loop.index-1] }}">{{
+                                follows_followed_by[loop.index-1] }}</a></td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td><a target="_blank" href="https://peakd.com/@{{ user_followed }}">{{ user_followed }}</a>
+                            </td>
+                            <td></td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                        {% for user_followed_by in follows_followed_by[follows_not_followed_by|length:] %}
+                        <tr>
+                            <td></td>
+                            <td><a target="_blank" href="https://peakd.com/@{{ user_followed_by }}">{{ user_followed_by
+                                    }}</a></td>
+                        </tr>
+                        {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                // Ocultar todas las tablas excepto la combinada inicialmente
+                $("#comparison-table").hide();
+
+                // Mostrar tabla correspondiente al hacer clic en el slider
+                $("#slider input[type='radio']").on("click", function () {
+                    var option = $(this).val();
+                    $(".table-container").hide();
+                    $("#" + option + "-table").show();
+                });
+            });
+            var username = document.getElementById('typed-text')
+            var text = username.textContent
+            const delay = 100; // Retardo entre la aparición de cada letra (en milisegundos)
+
+            let index = 0;
+            const typeText = () => {
+                if (index < text.length) {
+                    const typedText = text.substring(0, index + 1);
+                    document.getElementById("typed-text").textContent = typedText;
+                    index++;
+                    setTimeout(typeText, delay);
+                }
+            };
+
+            typeText();
+            function preloader(){
+            document.getElementById("loading").style.display = "none";
+            document.getElementById("content").style.display = "block";
+            }//preloader
+
+            window.onload = preloader();
+
+        </script>
+    </div>
+    {% endif %}
+</body>
+
+</body>
+
+</html>

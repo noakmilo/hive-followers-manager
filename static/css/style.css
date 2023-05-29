@@ -1,0 +1,130 @@
+header {
+    position: sticky;
+    top: 0;
+    background-color: #f0f0f8;
+    padding-bottom: 20px;
+    padding-top: 15px;
+}
+
+h3 {
+    margin-left: 20px;
+    margin-top: 5px;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.submitbtn {
+    background-color: #4795FF;
+    color: #ffffff;
+    border: 1px solid;
+    border-radius: 5px;
+    padding: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+.submitbtn:hover {
+    filter: brightness(110%);
+}
+
+.title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .title h3 {
+    margin: 0;
+    margin-left: 10px;
+  }
+  
+  .title p {
+    margin: 0;
+    margin-right: 10px;
+  }
+  
+  .hiveicon {
+    width: 8%;
+    margin-bottom: 3px;
+  }
+
+
+.headercontainer {
+    justify-items: center;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+}
+
+.slidercontainer {
+    justify-items: center;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+}
+
+input[type=radio] {
+    display: none;
+    padding: 5px;
+  }
+
+.sliderlbl {
+    border: 1px solid #4795FF;
+    border-radius: 5px;
+    margin-right: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding-left: 5px;
+    padding-right: 5px;
+}  
+
+input[type=radio]:checked+label  {
+    background-color: #4795FF;
+    color: #f0f0f8;
+}
+
+.sliderlbl:checked {
+    background-color: #4795FF;
+    color: #fff;
+}
+
+#typed-text {
+    overflow: hidden; /* Oculta el texto que aún no se ha mostrado */
+    white-space: nowrap; /* Evita el salto de línea */
+    margin: 0; /* Elimina el margen predeterminado */
+    animation: typing 4s steps(40, end) infinite;
+  }
+  
+  @keyframes typing {
+    from {
+      width: 0; /* Ancho inicial, sin texto visible */
+    }
+    to {
+      width: 100%; /* Ancho final, muestra todo el texto */
+    }
+  }
+
+  @media (max-width: 767px) {
+   h3 {
+        font-size: 18px;
+    }
+    .title p {
+    margin: 0;
+    margin-right: 2px;
+    font-size: 10px;
+    }
+    .headercontainer {
+        margin-top: 20px;
+    }
+  }
+
+  .loading {
+    top: 200 px;
+    margin: auto;
+    position: absolute;
+    z-index: 1000;
+    width: 160px;
+    height: 24px;
+    cursor: wait;
+    }

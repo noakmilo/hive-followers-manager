@@ -1,0 +1,4 @@
+Flask==2.2.2
+pick==2.2.0
+beem==0.24.13
+flask-bootstrap==3.3.7.1
