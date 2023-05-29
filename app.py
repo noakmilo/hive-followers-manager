@@ -24,7 +24,9 @@ def index():
 
 @app.route('/result', methods=['GET', 'POST'])
 def result():
-    account_name = request.form['account']
+    account_name = request.form['account'].strip().lower()
+    if account_name.startswith('@'):
+        account_name = account_name[1:]
     limit = 1000000000  # Se establece un límite inicial de 100 resultados por página
 
     try:
