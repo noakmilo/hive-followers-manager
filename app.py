@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 from pick import pick
 from beem import Hive
 from beem.account import Account
+from beem.exceptions import AccountDoesNotExistsException
 from flask_bootstrap import Bootstrap
 from builtins import max
 
@@ -13,6 +14,9 @@ app = Flask(__name__)
 hive = Hive()
 bootstrap = Bootstrap(app)
 
+def custom_max(*args):
+    return max(args)
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -23,7 +27,10 @@ def result():
     account_name = request.form['account']
     limit = 1000000000  # Se establece un límite inicial de 100 resultados por página
 
-    account = Account(account_name, blockchain_instance=hive)
+    try:
+        account = Account(account_name, blockchain_instance=hive)
+    except Exception:
+        return redirect('/')
 
     followers = account.get_followers()
     following = account.get_following()
@@ -44,10 +51,10 @@ def result():
     following_page = following[start:end]
 
     if len(followers_page) == 0:
-        return render_template('result.html', message="No followers information available")
+        return render_template('index.html', message="No followers information available.")
 
     if len(following_page) == 0:
-        return render_template('result.html', message="No following information available")
+        return render_template('index.html', message="No following information available.")
 
     total_pages = total_followers // limit
     if total_followers % limit != 0:
@@ -55,12 +62,8 @@ def result():
 
     return render_template('index.html', followers=followers, following=following,
                            follows_followed_by=follows_not_followed_by, follows_not_followed_by=follows_followed_by,
-                           total_pages=total_pages, current_page=page, max=max, account_name=account_name, total_followers=total_followers, total_following=total_following)
-
-
-
-
-
+                           total_pages=total_pages, current_page=page, max=max, account_name=account_name,
+                           total_followers=total_followers, total_following=total_following)
 
 if __name__ == '__main__':
     app.run(debug=True)
